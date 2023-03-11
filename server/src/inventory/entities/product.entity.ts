@@ -20,6 +20,15 @@ export class Product {
   @Column({ type: 'text', unique: true })
   sku: string;
 
+  @Column({ type: 'float' })
+  purchase_price: number;
+
+  @Column({ type: 'float' })
+  sale_price: number;
+
+  @Column({ type: 'float' })
+  readonly quantity: number;
+
   @Column({ type: 'varchar', nullable: true })
   image: string;
 
@@ -33,5 +42,5 @@ export class Product {
     () => InventoryTransaction,
     (inventoryTransaction) => inventoryTransaction.product,
   )
-  transations: InventoryTransaction[];
+  inventoryTransactions: InventoryTransaction[];
 }

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { InventoryTransaction } from '../entities/inventory-transactions.entity';
 import { Product } from '../entities/product.entity';
-import { Order } from '../entities/order.entity';
+import { SaleOrder } from '../entities/sale-order.entity';
 import { PurchaseOrder } from '../entities/purchase-order.entity';
 
 import {
@@ -19,8 +19,8 @@ export class InventoryTransactionsService {
     private inventoryTransactionRepo: Repository<InventoryTransaction>,
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
-    @InjectRepository(Order)
-    private orderRepo: Repository<Order>,
+    @InjectRepository(SaleOrder)
+    private saleOrderRepo: Repository<SaleOrder>,
     @InjectRepository(PurchaseOrder)
     private purchaseOrderRepo: Repository<PurchaseOrder>,
   ) {}
@@ -75,9 +75,9 @@ export class InventoryTransactionsService {
       (unit_cost_avg * balance + data.quantity * data.unit_cost) / newBalance;
 
     //Validando si el movimiento es de compra o venta
-    if (data.OrderId) {
-      newInventoryTransaction.order = await this.orderRepo.findOne(
-        data.OrderId,
+    if (data.saleOrderId) {
+      newInventoryTransaction.saleOrder = await this.saleOrderRepo.findOne(
+        data.saleOrderId,
       );
       newInventoryTransaction.unit_cost_avg = unit_cost_avg;
     } else if (data.purchaseOrderId) {

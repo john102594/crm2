@@ -30,7 +30,7 @@ DatabaseModule = __decorate([
                         password,
                         username: user,
                         database: name,
-                        synchronize: false,
+                        synchronize: true,
                         autoLoadEntities: true,
                     };
                 },

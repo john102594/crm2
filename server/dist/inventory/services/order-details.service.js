@@ -16,7 +16,7 @@ exports.OrderDetailsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const order_entity_1 = require("../entities/order.entity");
+const saleOrder_entity_1 = require("../entities/saleOrder.entity");
 const order_detail_entity_1 = require("../entities/order-detail.entity");
 const product_entity_1 = require("../entities/product.entity");
 const inventory_transactions_entity_1 = require("../entities/inventory-transactions.entity");
@@ -100,7 +100,7 @@ let OrderDetailsService = class OrderDetailsService {
 OrderDetailsService = __decorate([
     common_1.Injectable(),
     __param(0, typeorm_1.InjectRepository(inventory_transactions_entity_1.InventoryTransaction)),
-    __param(1, typeorm_1.InjectRepository(order_entity_1.Order)),
+    __param(1, typeorm_1.InjectRepository(saleOrder_entity_1.Order)),
     __param(2, typeorm_1.InjectRepository(order_detail_entity_1.OrderDetail)),
     __param(3, typeorm_1.InjectRepository(product_entity_1.Product)),
     __metadata("design:paramtypes", [typeorm_2.Repository,

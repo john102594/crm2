@@ -25,12 +25,11 @@ let ProductsService = class ProductsService {
         if (params.limit) {
             const { limit, offset } = params;
             return await this.productRepo.find({
-                relations: ['inventoryTransaction'],
                 take: limit,
                 skip: offset,
             });
         }
-        return await this.productRepo.find();
+        return await this.productRepo.createQueryBuilder('product').getMany();
     }
     async findOne(id) {
         const product = await this.productRepo.findOne(id);

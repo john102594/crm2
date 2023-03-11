@@ -14,10 +14,10 @@ const openapi = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 const product_entity_1 = require("./product.entity");
 const purchase_order_entity_1 = require("./purchase-order.entity");
-const order_entity_1 = require("./order.entity");
+const sale_order_entity_1 = require("./sale-order.entity");
 let InventoryTransaction = class InventoryTransaction {
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => Number }, product: { required: true, type: () => require("./product.entity").Product }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, balance: { required: true, type: () => Number }, unit_cost_avg: { required: true, type: () => Number }, purchaseOrder: { required: true, type: () => require("./purchase-order.entity").PurchaseOrder }, order: { required: true, type: () => require("./order.entity").Order }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
+        return { id: { required: true, type: () => Number }, product: { required: true, type: () => require("./product.entity").Product }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, balance: { required: true, type: () => Number }, unit_cost_avg: { required: true, type: () => Number }, purchaseOrder: { required: true, type: () => require("./purchase-order.entity").PurchaseOrder }, saleOrder: { required: true, type: () => require("./sale-Order.entity").SaleOrder }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
     }
 };
 __decorate([
@@ -25,7 +25,7 @@ __decorate([
     __metadata("design:type", Number)
 ], InventoryTransaction.prototype, "id", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => product_entity_1.Product, (product) => product.transations),
+    typeorm_1.ManyToOne(() => product_entity_1.Product, (product) => product.inventoryTransactions),
     __metadata("design:type", product_entity_1.Product)
 ], InventoryTransaction.prototype, "product", void 0);
 __decorate([
@@ -49,9 +49,9 @@ __decorate([
     __metadata("design:type", purchase_order_entity_1.PurchaseOrder)
 ], InventoryTransaction.prototype, "purchaseOrder", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => order_entity_1.Order),
-    __metadata("design:type", order_entity_1.Order)
-], InventoryTransaction.prototype, "order", void 0);
+    typeorm_1.ManyToOne(() => sale_order_entity_1.SaleOrder),
+    __metadata("design:type", sale_order_entity_1.SaleOrder)
+], InventoryTransaction.prototype, "saleOrder", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)

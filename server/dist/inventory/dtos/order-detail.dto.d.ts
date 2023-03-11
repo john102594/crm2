@@ -1,4 +1,5 @@
 export declare class CreateOrderItemDto {
+    readonly orderId: number;
     readonly quantity: number;
     readonly unit_price: number;
     readonly productId: number;

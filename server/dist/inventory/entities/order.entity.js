@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Order = void 0;
 const openapi = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
+const orderDetail_entity_1 = require("./orderDetail.entity");
 const inventory_transactions_entity_1 = require("./inventory-transactions.entity");
-const order_detail_entity_1 = require("./order-detail.entity");
 let Order = class Order {
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => Number }, orderDetail: { required: true, type: () => [require("./order-detail.entity").OrderDetail] }, inventoryTransactions: { required: true, type: () => [require("./inventory-transactions.entity").InventoryTransaction] }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
+        return { id: { required: true, type: () => Number }, OrderDetail: { required: true, type: () => [require("./orderDetail.entity").OrderDetail] }, inventoryTransactions: { required: true, type: () => [require("./inventory-transactions.entity").InventoryTransaction] }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
     }
 };
 __decorate([
@@ -24,11 +24,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "id", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => order_detail_entity_1.OrderDetail, (orderDetail) => orderDetail.order),
+    typeorm_1.OneToMany(() => orderDetail_entity_1.OrderDetail, (OrderDetail) => OrderDetail.Order),
     __metadata("design:type", Array)
-], Order.prototype, "orderDetail", void 0);
+], Order.prototype, "OrderDetail", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => inventory_transactions_entity_1.InventoryTransaction, (inventoryTransactions) => inventoryTransactions.order),
+    typeorm_1.OneToMany(() => inventory_transactions_entity_1.InventoryTransaction, (inventoryTransactions) => inventoryTransactions.Order),
     __metadata("design:type", Array)
 ], Order.prototype, "inventoryTransactions", void 0);
 __decorate([

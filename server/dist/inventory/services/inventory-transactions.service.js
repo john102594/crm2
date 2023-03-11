@@ -18,13 +18,13 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const inventory_transactions_entity_1 = require("../entities/inventory-transactions.entity");
 const product_entity_1 = require("../entities/product.entity");
-const order_entity_1 = require("../entities/order.entity");
+const sale_order_entity_1 = require("../entities/sale-order.entity");
 const purchase_order_entity_1 = require("../entities/purchase-order.entity");
 let InventoryTransactionsService = class InventoryTransactionsService {
-    constructor(inventoryTransactionRepo, productRepo, orderRepo, purchaseOrderRepo) {
+    constructor(inventoryTransactionRepo, productRepo, saleOrderRepo, purchaseOrderRepo) {
         this.inventoryTransactionRepo = inventoryTransactionRepo;
         this.productRepo = productRepo;
-        this.orderRepo = orderRepo;
+        this.saleOrderRepo = saleOrderRepo;
         this.purchaseOrderRepo = purchaseOrderRepo;
     }
     async findAll() {
@@ -58,8 +58,8 @@ let InventoryTransactionsService = class InventoryTransactionsService {
         }
         newInventoryTransaction.balance = newBalance;
         const newUnitCostAvg = (unit_cost_avg * balance + data.quantity * data.unit_cost) / newBalance;
-        if (data.OrderId) {
-            newInventoryTransaction.order = await this.orderRepo.findOne(data.OrderId);
+        if (data.saleOrderId) {
+            newInventoryTransaction.saleOrder = await this.saleOrderRepo.findOne(data.saleOrderId);
             newInventoryTransaction.unit_cost_avg = unit_cost_avg;
         }
         else if (data.purchaseOrderId) {
@@ -81,7 +81,7 @@ InventoryTransactionsService = __decorate([
     common_1.Injectable(),
     __param(0, typeorm_1.InjectRepository(inventory_transactions_entity_1.InventoryTransaction)),
     __param(1, typeorm_1.InjectRepository(product_entity_1.Product)),
-    __param(2, typeorm_1.InjectRepository(order_entity_1.Order)),
+    __param(2, typeorm_1.InjectRepository(sale_order_entity_1.SaleOrder)),
     __param(3, typeorm_1.InjectRepository(purchase_order_entity_1.PurchaseOrder)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,

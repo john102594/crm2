@@ -12,7 +12,4 @@ lerna-debug.log*
 
 # OS
 .DS_Store
-
 *.env
-server/postgres_data
-/test

@@ -15,7 +15,7 @@ const typeorm_1 = require("typeorm");
 const inventory_transactions_entity_1 = require("./inventory-transactions.entity");
 let Product = class Product {
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => Number }, name: { required: true, type: () => String }, sku: { required: true, type: () => String }, image: { required: true, type: () => String }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date }, transations: { required: true, type: () => [require("./inventory-transactions.entity").InventoryTransaction] } };
+        return { id: { required: true, type: () => Number }, name: { required: true, type: () => String }, sku: { required: true, type: () => String }, purchase_price: { required: true, type: () => Number }, sale_price: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, image: { required: true, type: () => String }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date }, inventoryTransactions: { required: true, type: () => [require("./inventory-transactions.entity").InventoryTransaction] } };
     }
 };
 __decorate([
@@ -31,6 +31,18 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "sku", void 0);
 __decorate([
+    typeorm_1.Column({ type: 'float' }),
+    __metadata("design:type", Number)
+], Product.prototype, "purchase_price", void 0);
+__decorate([
+    typeorm_1.Column({ type: 'float' }),
+    __metadata("design:type", Number)
+], Product.prototype, "sale_price", void 0);
+__decorate([
+    typeorm_1.Column({ type: 'float' }),
+    __metadata("design:type", Number)
+], Product.prototype, "quantity", void 0);
+__decorate([
     typeorm_1.Column({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
 ], Product.prototype, "image", void 0);
@@ -45,7 +57,7 @@ __decorate([
 __decorate([
     typeorm_1.OneToMany(() => inventory_transactions_entity_1.InventoryTransaction, (inventoryTransaction) => inventoryTransaction.product),
     __metadata("design:type", Array)
-], Product.prototype, "transations", void 0);
+], Product.prototype, "inventoryTransactions", void 0);
 Product = __decorate([
     typeorm_1.Entity()
 ], Product);

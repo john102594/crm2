@@ -15,7 +15,7 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class CreateInventoryTransactionDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { productId: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, unit_cost: { required: true, type: () => Number }, purchaseOrderId: { required: true, type: () => Number }, OrderId: { required: true, type: () => Number } };
+        return { productId: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, unit_cost: { required: true, type: () => Number }, purchaseOrderId: { required: true, type: () => Number }, saleOrderId: { required: true, type: () => Number } };
     }
 }
 __decorate([
@@ -54,7 +54,7 @@ __decorate([
     class_validator_1.IsPositive(),
     swagger_1.ApiProperty(),
     __metadata("design:type", Number)
-], CreateInventoryTransactionDto.prototype, "OrderId", void 0);
+], CreateInventoryTransactionDto.prototype, "saleOrderId", void 0);
 exports.CreateInventoryTransactionDto = CreateInventoryTransactionDto;
 class UpdateInventoryTransactionDto extends swagger_1.PartialType(CreateInventoryTransactionDto) {
     static _OPENAPI_METADATA_FACTORY() {

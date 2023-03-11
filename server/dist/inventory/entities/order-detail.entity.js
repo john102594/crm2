@@ -13,10 +13,10 @@ exports.OrderDetail = void 0;
 const openapi = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 const product_entity_1 = require("./product.entity");
-const order_entity_1 = require("./order.entity");
+const salesOrder_entity_1 = require("./salesOrder.entity");
 let OrderDetail = class OrderDetail {
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, product: { required: true, type: () => require("./product.entity").Product }, order: { required: true, type: () => require("./order.entity").Order }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
+        return { id: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, product: { required: true, type: () => require("./product.entity").Product }, order: { required: true, type: () => require("./salesOrder.entity").Order }, createdAt: { required: true, type: () => Date }, updateAt: { required: true, type: () => Date } };
     }
 };
 __decorate([
@@ -36,8 +36,8 @@ __decorate([
     __metadata("design:type", product_entity_1.Product)
 ], OrderDetail.prototype, "product", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => order_entity_1.Order, (order) => order.orderDetail),
-    __metadata("design:type", order_entity_1.Order)
+    typeorm_1.ManyToOne(() => salesOrder_entity_1.Order, (order) => order.orderDetail),
+    __metadata("design:type", salesOrder_entity_1.Order)
 ], OrderDetail.prototype, "order", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),

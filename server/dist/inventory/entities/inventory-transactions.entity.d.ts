@@ -1,6 +1,6 @@
 import { Product } from './product.entity';
 import { PurchaseOrder } from './purchase-order.entity';
-import { Order } from './order.entity';
+import { SaleOrder } from './sale-order.entity';
 export declare class InventoryTransaction {
     id: number;
     product: Product;
@@ -9,7 +9,7 @@ export declare class InventoryTransaction {
     balance: number;
     unit_cost_avg: number;
     purchaseOrder: PurchaseOrder;
-    order: Order;
+    saleOrder: SaleOrder;
     createdAt: Date;
     updateAt: Date;
 }

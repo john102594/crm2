@@ -15,7 +15,7 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class CreateOrderItemDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, productId: { required: true, type: () => Number } };
+        return { orderId: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, unit_price: { required: true, type: () => Number }, productId: { required: true, type: () => Number } };
     }
 }
 __decorate([

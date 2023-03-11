@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Order } from '../entities/order.entity';
+import { Order } from '../entities/saleOrder.entity';
 import { OrderDetail } from '../entities/order-detail.entity';
 import { CreateOrderItemDto, UpdateOrderItemDto } from '../dtos/order-detail.dto';
 export declare class OrdersService {

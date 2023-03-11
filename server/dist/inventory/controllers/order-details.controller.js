@@ -40,7 +40,7 @@ let OrderDetailsController = class OrderDetailsController {
 __decorate([
     common_1.Get(),
     swagger_1.ApiOperation({ summary: 'List of orderdetails' }),
-    openapi.ApiResponse({ status: 200, type: [require("../entities/order-detail.entity").OrderDetail] }),
+    openapi.ApiResponse({ status: 200, type: [Object] }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -48,7 +48,7 @@ __decorate([
 __decorate([
     common_1.Get(':orderId'),
     common_1.HttpCode(common_1.HttpStatus.ACCEPTED),
-    openapi.ApiResponse({ status: common_1.HttpStatus.ACCEPTED, type: require("../entities/order-detail.entity").OrderDetail }),
+    openapi.ApiResponse({ status: common_1.HttpStatus.ACCEPTED, type: Object }),
     __param(0, common_1.Param('orderId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -56,7 +56,7 @@ __decorate([
 ], OrderDetailsController.prototype, "getOne", null);
 __decorate([
     common_1.Post(),
-    openapi.ApiResponse({ status: 201, type: require("../entities/order.entity").Order }),
+    openapi.ApiResponse({ status: 201, type: require("../entities/saleOrder.entity").Order }),
     __param(0, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),
@@ -64,7 +64,7 @@ __decorate([
 ], OrderDetailsController.prototype, "create", null);
 __decorate([
     common_1.Put(':id'),
-    openapi.ApiResponse({ status: 200, type: require("../entities/order-detail.entity").OrderDetail }),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, common_1.Param('id')), __param(1, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Array]),

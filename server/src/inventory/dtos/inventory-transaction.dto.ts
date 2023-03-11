@@ -39,7 +39,7 @@ export class CreateInventoryTransactionDto {
   @IsNumber()
   @IsPositive()
   @ApiProperty()
-  readonly OrderId: number;
+  readonly saleOrderId: number;
 }
 
 export class UpdateInventoryTransactionDto extends PartialType(

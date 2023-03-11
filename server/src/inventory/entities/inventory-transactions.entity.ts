@@ -9,14 +9,14 @@ import {
 
 import { Product } from './product.entity';
 import { PurchaseOrder } from './purchase-order.entity';
-import { Order } from './order.entity';
+import { SaleOrder } from './sale-order.entity';
 
 @Entity()
 export class InventoryTransaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.transations)
+  @ManyToOne(() => Product, (product) => product.inventoryTransactions)
   product: Product;
 
   @Column({ type: 'float' })
@@ -34,8 +34,8 @@ export class InventoryTransaction {
   @ManyToOne(() => PurchaseOrder)
   purchaseOrder: PurchaseOrder;
 
-  @ManyToOne(() => Order)
-  order: Order;
+  @ManyToOne(() => SaleOrder)
+  saleOrder: SaleOrder;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

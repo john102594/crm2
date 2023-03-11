@@ -1,5 +1,5 @@
 import { Product } from './product.entity';
-import { Order } from './order.entity';
+import { Order } from './salesOrder.entity';
 export declare class OrderDetail {
     id: number;
     readonly quantity: number;
