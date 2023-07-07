@@ -2,13 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { SaleOrder } from '../entities/sale-Order.entity';
-import { SaleOrderDetail } from '../entities/sale-Order-detail.entity';
+import { SaleOrder } from '../entities/sale-order.entity';
+import { SaleOrderDetail } from '../entities/sale-order-detail.entity';
 import { Product } from '../entities/product.entity';
 import {
   CreateSaleOrderItemDto,
   UpdateSaleOrderItemDto,
-} from '../dtos/sale-Order-detail.dto';
+} from '../dtos/sale-order-detail.dto';
 import { InventoryTransaction } from '../entities/inventory-transactions.entity';
 
 @Injectable()
