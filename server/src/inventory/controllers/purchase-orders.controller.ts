@@ -14,10 +14,9 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { PurchaseOrdersService } from '../services/purchase-orders.service';
-import {
-  CreatePurchaseOrderItemDto,
-  UpdatePurchaseOrderItemDto,
-} from '../dtos/purchase-order-detail.dto';
+import { CreatePurchaseOrderDto } from '../dtos/purchase-order.dto';
+import { Prisma } from '@prisma/client';
+import { ok } from 'assert';
 
 @ApiTags('purchaseorders')
 @Controller('purchaseorders')
@@ -37,15 +36,12 @@ export class PurchaseOrdersController {
   }
 
   @Post()
-  create(@Body() payload: CreatePurchaseOrderItemDto[]) {
+  create(@Body() payload: CreatePurchaseOrderDto) {
     return this.purchaseOrdersService.create(payload);
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: number,
-    @Body() payload: UpdatePurchaseOrderItemDto[],
-  ) {
+  update(@Param('id') id: number, @Body() payload: any[]) {
     return this.purchaseOrdersService.update(+id, payload);
   }
 

@@ -18,9 +18,10 @@ import {
   CreateSaleOrderItemDto,
   UpdateSaleOrderItemDto,
 } from '../dtos/sale-order-detail.dto';
+import { CreateSaleOrderDto } from '../dtos/sale-order.dto';
 
-@ApiTags('saleOrders')
-@Controller('saleOrders')
+@ApiTags('saleorders')
+@Controller('saleorders')
 export class SaleOrdersController {
   constructor(private saleOrdersService: SaleOrdersService) {}
 
@@ -37,7 +38,7 @@ export class SaleOrdersController {
   }
 
   @Post()
-  create(@Body() payload: CreateSaleOrderItemDto[]) {
+  create(@Body() payload: CreateSaleOrderDto) {
     return this.saleOrdersService.create(payload);
   }
 

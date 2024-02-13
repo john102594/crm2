@@ -20,6 +20,7 @@ import {
   FilterProductDto,
 } from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('products')
 @Controller('products')
@@ -28,20 +29,14 @@ export class ProductsController {
 
   @Get()
   @ApiOperation({ summary: 'List of products' })
-  getProducts(@Query() params: FilterProductDto) {
-    return this.productsService.findAll(params);
+  getProducts(@Body() params: Prisma.ProductFindManyArgs) {
+    return this.productsService.find(params);
   }
 
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('productId', ParseIntPipe) productId: number) {
     return this.productsService.findOne(productId);
-  }
-
-  @Get('/sku/:productSku')
-  @HttpCode(HttpStatus.ACCEPTED)
-  getOneSku(@Param('productSku') productSku: string) {
-    return this.productsService.findSku(productSku);
   }
 
   @Post()
@@ -51,16 +46,16 @@ export class ProductsController {
 
   @Post('/bulk')
   bulkCreate(@Body() payload: CreateProductDto[]) {
-    return this.productsService.bulkCreate(payload);
+    return this.productsService.createMany(payload);
   }
 
   @Put(':id')
   update(@Param('id') id: number, @Body() payload: UpdateProductDto) {
-    return this.productsService.update(+id, payload);
+    return this.productsService.update(id, payload);
   }
 
   @Delete(':id')
   delete(@Param('id') id: number) {
-    return this.productsService.remove(+id);
+    return this.productsService.remove(id);
   }
 }

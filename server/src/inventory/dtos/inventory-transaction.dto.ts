@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 export class CreateInventoryTransactionDto {
@@ -14,12 +20,22 @@ export class CreateInventoryTransactionDto {
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  readonly unit_price: number;
+  readonly unitPrice: number;
 
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  readonly unit_cost: number;
+  readonly balance: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  readonly unitCostAvg: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  readonly transactionTypeId: number;
 
   // @IsNumber()
   // @ApiProperty()
@@ -28,18 +44,6 @@ export class CreateInventoryTransactionDto {
   // @IsNumber()
   // @ApiProperty()
   // readonly unit_cost_avg: number;
-
-  @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  @ApiProperty()
-  readonly purchaseOrderId: number;
-
-  @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  @ApiProperty()
-  readonly saleOrderId: number;
 }
 
 export class UpdateInventoryTransactionDto extends PartialType(

@@ -1,26 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from 'src/prisma/prisma.service';
 
-import { User } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import { CustomersService } from './customers.service';
+// import { CustomersService } from './customers.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User) private userRepo: Repository<User>,
-    private customersService: CustomersService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return await this.userRepo.find({
-      relations: ['customer'],
-    });
+    return this.prisma.user.findMany();
   }
 
   async findOne(id: number) {
-    const user = await this.userRepo.findOne(id);
+    const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
     }
@@ -28,21 +21,16 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto) {
-    const newUser = this.userRepo.create(data); //Parsea la data al Repo
-    if (data.customerId) {
-      const customer = await this.customersService.findOne(data.customerId);
-      newUser.customer = customer;
-    }
-    return await this.userRepo.save(newUser);
+    return this.prisma.user.create({
+      data,
+    });
   }
 
   async update(id: number, changes: UpdateUserDto) {
-    const user = await this.userRepo.findOne(id);
-    this.userRepo.merge(user, changes); //Parsea el user a lo recibido en el changes
-    return await this.userRepo.save(user);
+    return this.prisma.user.update({ where: { id }, data: changes });
   }
 
   async remove(id: number) {
-    return await this.userRepo.delete(id);
+    return await this.prisma.user.delete({ where: { id } });
   }
 }

@@ -3,9 +3,9 @@ import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 export class CreateSaleOrderItemDto {
   // @IsNumber()
-  // @IsPositive()
+  // @IsPositive()}
   // @ApiProperty()
-  readonly orderId: number;
+  // readonly orderId: number;
 
   @IsNumber()
   @ApiProperty()

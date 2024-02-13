@@ -1,48 +1,24 @@
-import { Module, HttpModule, HttpService } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { DatabaseModule } from './database/database.module';
-import { enviroments } from './enviroments';
-import { InventoryModule } from './inventory/inventory.module';
 import config from './config';
+
+import { UsersModule } from './users/users.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       load: [config],
       isGlobal: true,
-      validationSchema: Joi.object({
-        API_KEY: Joi.number().required(),
-        DATABASE_NAME: Joi.string().required(),
-        DATABASE_HOST: Joi.string().required(),
-        DATABASE_PORT: Joi.number().required(),
-        DATABASE_USER: Joi.string().required(),
-        DATABASE_PASSWORD: Joi.string().required(),
-      }),
     }),
-    HttpModule,
+    PrismaModule,
     UsersModule,
-    DatabaseModule,
     InventoryModule,
   ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: 'TASKS',
-      useFactory: async (http: HttpService) => {
-        const tasks = await http
-          .get('https://jsonplaceholder.typicode.com/todos')
-          .toPromise();
-        return tasks.data;
-      },
-      inject: [HttpService],
-    },
-  ],
+  controllers: [],
+  providers: [],
+  exports: [],
 })
 export class AppModule {}

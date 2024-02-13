@@ -3,92 +3,94 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
 
-import { Product } from '../entities/product.entity';
 import {
   CreateProductDto,
   UpdateProductDto,
   FilterProductDto,
+  CreatedManyProduct,
 } from '../dtos/products.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma, Product } from '@prisma/client';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectRepository(Product) private productRepo: Repository<Product>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
+  //create crud for product service using prisma service
 
-  async findAll(params?: FilterProductDto) {
-    if (params.limit) {
-      const { limit, offset } = params;
-      return await this.productRepo.find({
-        take: limit,
-        skip: offset,
-      });
-    }
-    return await this.productRepo.createQueryBuilder('product').getMany();
+  // async find(params?: FilterProductDto): Promise<Product[]> {
+  //   if (Object.keys(params).length) {
+  //     const products = await this.prisma.product.findMany({
+  //       skip: params.skip,
+  //       take: params.take,
+  //       where: params.where,
+  //     });
+  //     return products;
+  //   } else {
+  //     const products = this.prisma.product.findMany({});
+  //     return products;
+  //   }
+  // }
+
+  async find(params?: Prisma.ProductFindManyArgs): Promise<Product[]> {
+    return await this.prisma.product.findMany({
+      skip: params.skip,
+      take: params.take,
+      where: params.where,
+    });
   }
 
   async findOne(id: number) {
-    const product = await this.productRepo.findOne(id);
+    const product = await this.prisma.product.findUnique({
+      where: { id: +id },
+    });
     if (!product) {
       throw new NotFoundException(`Product #${id} not found`);
     }
     return product;
   }
 
-  async findSku(productSku: string) {
-    const product = await this.productRepo.findOne({ sku: productSku });
-    if (!product) {
-      throw new NotFoundException(
-        `Product SKU #${productSku} is already created`,
-      );
-    }
-    return product;
+  async createMany(data: CreateProductDto[]) {
+    const products: CreatedManyProduct[] = await Promise.all(
+      data.map(async (product) => {
+        const findProduct = await this.prisma.product.findUnique({
+          where: { sku: product.sku },
+        });
+
+        //Validate if sku exist in database
+        if (findProduct !== null) {
+          //If exist return message and product
+          return { state: 'Sku eas exist in database', product: product };
+        }
+        //Else return message and create product
+        const newProduct = await this.prisma.product.create({
+          data: product,
+        });
+        return { state: 'Created Ok', product: newProduct };
+      }),
+    );
+    return products;
   }
 
   async create(data: CreateProductDto) {
-    const product = await this.productRepo.findOne({ sku: data.sku });
-    if (product) {
-      throw new BadRequestException(
-        `Product SKU #${data.sku} is already created`,
-      );
-    }
-    const newProduct = this.productRepo.create(data); //Parsea la data al Repo
-    return await this.productRepo.save(newProduct);
-  }
-
-  //Bulk created
-  async bulkCreate(data: CreateProductDto[]) {
-    const skus = data.map((element) => element.sku);
-    //Validate that sku no created in the db
-    const products = await this.productRepo.find({
-      where: { sku: In(skus) },
+    const product = await this.prisma.product.create({
+      data,
     });
-
-    //Parse to sku in skuscreated
-    const skusCreated = products.map((element) => element.sku);
-    if (skusCreated[0]) {
-      throw new BadRequestException(
-        `Product SKUS ${skusCreated} is already created`,
-      );
-    }
-
-    const newProducts = this.productRepo.create(data); //Parsea la data al Repo
-    return await this.productRepo.save(newProducts);
+    return product;
   }
 
   async update(id: number, changes: UpdateProductDto) {
-    const product = await this.productRepo.findOne(id);
-    if (!product) {
-      throw new NotFoundException(`Product #${id} not found`);
-    }
-    this.productRepo.merge(product, changes); //Parsea el product a lo recibido en el changes
-    return await this.productRepo.save(product);
+    const product = await this.prisma.product.update({
+      where: { id: +id },
+      data: changes,
+    });
+    return product;
   }
 
   async remove(id: number) {
-    return await this.productRepo.delete(id);
+    const product = await this.prisma.product.delete({
+      where: { id: +id },
+    });
+    return product;
   }
 }

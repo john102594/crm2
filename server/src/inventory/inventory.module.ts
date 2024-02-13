@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 import { SaleOrderDetailsService } from './services/sale-order-details.service';
 import { SaleOrdersService } from './services/sale-order.service';
@@ -15,39 +15,23 @@ import { PurchaseOrdersController } from './controllers/purchase-orders.controll
 import { PurchaseOrderDetailsController } from './controllers/purchase-order-details.controller';
 import { SaleOrderDetailsController } from './controllers/sale-order-details.controller';
 
-import { Product } from './entities/product.entity';
-import { InventoryTransaction } from './entities/inventory-transactions.entity';
-import { SaleOrderDetail } from './entities/sale-order-detail.entity';
-import { SaleOrder } from './entities/sale-order.entity';
-import { PurchaseOrderDetail } from './entities/purchase-order-detail.entity';
-import { PurchaseOrder } from './entities/purchase-order.entity';
-
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      Product,
-      InventoryTransaction,
-      SaleOrder,
-      SaleOrderDetail,
-      PurchaseOrder,
-      PurchaseOrderDetail,
-    ]),
-  ],
+  imports: [PrismaModule],
   providers: [
-    SaleOrderDetailsService,
+    // SaleOrderDetailsService,
     SaleOrdersService,
     ProductsService,
     PurchaseOrdersService,
-    PurchaseOrderDetailsService,
-    InventoryTransactionsService,
+    // PurchaseOrderDetailsService,
+    // InventoryTransactionsService,
   ],
   controllers: [
-    InventoryTransactionsController,
+    // InventoryTransactionsController,
     SaleOrdersController,
     ProductsController,
     PurchaseOrdersController,
-    PurchaseOrderDetailsController,
-    SaleOrderDetailsController,
+    // PurchaseOrderDetailsController,
+    // SaleOrderDetailsController,
   ],
 })
 export class InventoryModule {}

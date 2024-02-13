@@ -1,4 +1,4 @@
-import { IsNumber, IsPositive } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive, isPositive } from 'class-validator';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 export class CreatePurchaseOrderItemDto {
@@ -8,6 +8,7 @@ export class CreatePurchaseOrderItemDto {
   // readonly orderId: number;
 
   @IsNumber()
+  @IsNotEmpty()
   @ApiProperty()
   readonly quantity: number;
 
