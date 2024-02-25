@@ -1,9 +1,13 @@
 import { UpdateSaleOrderItemDto } from '../dtos/sale-order-detail.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSaleOrderDto } from '../dtos/sale-order.dto';
+import { UploadFilesService } from 'src/files/upload-files.service';
+import { ParseFilesService } from 'src/files/parse-files.service';
 export declare class SaleOrdersService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private uploadFilesService;
+    private parseFilesService;
+    constructor(prisma: PrismaService, uploadFilesService: UploadFilesService, parseFilesService: ParseFilesService);
     findAll(): Promise<({
         saleOrderDetails: (import("@prisma/client/runtime").GetResult<{
             id: number;
@@ -34,6 +38,7 @@ export declare class SaleOrdersService {
         createdAt: Date;
         updateAt: Date;
     }, unknown> & {}>;
+    createFromCsv(file: any): Promise<any>;
     create(payload: CreateSaleOrderDto): Promise<any>;
     update(id: number, changes: UpdateSaleOrderItemDto[]): Promise<void>;
     remove(id: number): Promise<import("@prisma/client/runtime").GetResult<{

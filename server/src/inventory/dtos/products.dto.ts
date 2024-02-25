@@ -7,11 +7,11 @@ import {
   IsNumber,
   IsArray,
 } from 'class-validator';
-import { PartialType, ApiProperty } from '@nestjs/swagger';
+import { PartialType, ApiProperty, PickType } from '@nestjs/swagger';
 
 export class CreateProductDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty({ description: `product's name` })
   readonly name: string;
 
@@ -35,9 +35,16 @@ export class CreateProductDto {
   @IsNumber()
   @ApiProperty()
   quantity: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  ubicationId: number;
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {}
+
+export class FindSkuProductDto extends PickType(CreateProductDto, ['sku']) {}
 
 export class CreatedManyProduct {
   state: string;

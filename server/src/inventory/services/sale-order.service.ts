@@ -10,10 +10,17 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSaleOrderDto } from '../dtos/sale-order.dto';
 import { CreateInventoryTransactionDto } from '../dtos/inventory-transaction.dto';
+import { UploadFilesService } from 'src/files/upload-files.service';
+import { ParseFilesService } from 'src/files/parse-files.service';
+import moment from 'moment';
 
 @Injectable()
 export class SaleOrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private uploadFilesService: UploadFilesService,
+    private parseFilesService: ParseFilesService,
+  ) {}
 
   async findAll() {
     return await this.prisma.saleOrder.findMany({
@@ -29,28 +36,72 @@ export class SaleOrdersService {
     return order;
   }
 
+  async createFromCsv(file) {
+    try {
+      const csvData = await this.uploadFilesService.uploadCsv(file, true);
+
+      const csvParse = (await this.parseFilesService.parseCsv(csvData)) as [
+        {
+          sku: string;
+          total: number;
+          productid: number;
+          quantity: number;
+          unitprice: number;
+          createdat: string;
+        },
+      ];
+
+      // Parse Data
+      let data = [];
+      for (let i = 0; i < csvParse.length; i++) {
+        const element = csvParse[i];
+        // let dateString = element.createdat;
+        // const time = await new Date(
+        //   dateString.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3'),
+        // );
+        const order: CreateSaleOrderDto = {
+          total_cost: element.total,
+          saleOrderDetails: [
+            {
+              productId: element.productid,
+              unit_price: element.unitprice,
+              quantity: element.quantity,
+            },
+          ],
+        };
+        // data.push(await this.create(order));
+        data.push(order);
+      }
+
+      return data;
+    } catch (error) {
+      return error;
+    }
+  }
+
   async create(payload: CreateSaleOrderDto) {
     const productsId = payload.saleOrderDetails.map(
       (element) => element.productId,
     );
+    console.log(productsId);
     try {
       return await this.prisma.$transaction(async (tx) => {
         let InventaryTransaction: CreateInventoryTransactionDto[] = [];
 
         for (let i = 0; i < productsId.length; i++) {
           const element = payload.saleOrderDetails[i];
-          const result = (await tx.inventoryTransaction.findFirst({
+          const result = (await tx.product.findUnique({
             select: {
-              balance: true,
+              quantity: true,
               unitCostAvg: true,
             },
-            where: { productId: productsId[i] },
-            orderBy: { id: 'desc' },
+            where: { id: productsId[i] },
           })) || {
-            balance: 0,
+            quantity: 0,
             unitCostAvg: 0,
           };
-          const newsaldo = Number(result.balance) - element.quantity;
+          console.log(result);
+          const newsaldo = Number(result.quantity) - element.quantity;
 
           InventaryTransaction.push({
             productId: element.productId,

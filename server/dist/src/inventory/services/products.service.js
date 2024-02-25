@@ -12,9 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const upload_files_service_1 = require("../../files/upload-files.service");
+const parse_files_service_1 = require("../../files/parse-files.service");
 let ProductsService = exports.ProductsService = class ProductsService {
-    constructor(prisma) {
+    constructor(prisma, uploadFilesService, parseFilesService) {
         this.prisma = prisma;
+        this.uploadFilesService = uploadFilesService;
+        this.parseFilesService = parseFilesService;
     }
     async find(params) {
         return await this.prisma.product.findMany({
@@ -32,6 +36,17 @@ let ProductsService = exports.ProductsService = class ProductsService {
         }
         return product;
     }
+    async findOneSku(sku) {
+        try {
+            const product = await this.prisma.product.findUnique({
+                where: { sku: sku },
+            });
+            return product;
+        }
+        catch (error) {
+            return error;
+        }
+    }
     async createMany(data) {
         const products = await Promise.all(data.map(async (product) => {
             const findProduct = await this.prisma.product.findUnique({
@@ -46,6 +61,22 @@ let ProductsService = exports.ProductsService = class ProductsService {
             return { state: 'Created Ok', product: newProduct };
         }));
         return products;
+    }
+    async createFromCsv(file) {
+        try {
+            const csvData = await this.uploadFilesService.uploadCsv(file, true);
+            const csvParse = (await this.parseFilesService.parseCsv(csvData));
+            const data = csvParse.map(({ sku, quantity, unitcostavg, saleprice }) => ({
+                sku,
+                quantity: quantity | 0,
+                unitCostAvg: unitcostavg | 0,
+                salePrice: saleprice | 0,
+            }));
+            return await this.prisma.product.createMany({ data });
+        }
+        catch (error) {
+            return error;
+        }
     }
     async create(data) {
         const product = await this.prisma.product.create({
@@ -69,6 +100,8 @@ let ProductsService = exports.ProductsService = class ProductsService {
 };
 exports.ProductsService = ProductsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        upload_files_service_1.UploadFilesService,
+        parse_files_service_1.ParseFilesService])
 ], ProductsService);
 //# sourceMappingURL=products.service.js.map

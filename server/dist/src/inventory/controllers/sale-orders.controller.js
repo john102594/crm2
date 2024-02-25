@@ -18,6 +18,8 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const sale_order_service_1 = require("../services/sale-order.service");
 const sale_order_dto_1 = require("../dtos/sale-order.dto");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let SaleOrdersController = exports.SaleOrdersController = class SaleOrdersController {
     constructor(saleOrdersService) {
         this.saleOrdersService = saleOrdersService;
@@ -27,6 +29,14 @@ let SaleOrdersController = exports.SaleOrdersController = class SaleOrdersContro
     }
     getOne(orderId) {
         return this.saleOrdersService.findOne(orderId);
+    }
+    fromCsvCreate(file) {
+        try {
+            return this.saleOrdersService.createFromCsv(file);
+        }
+        catch (error) {
+            return error;
+        }
     }
     create(payload) {
         return this.saleOrdersService.create(payload);
@@ -55,6 +65,19 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], SaleOrdersController.prototype, "getOne", null);
+__decorate([
+    (0, common_1.Post)('/createfromcsv'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './files',
+        }),
+    })),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SaleOrdersController.prototype, "fromCsvCreate", null);
 __decorate([
     (0, common_1.Post)(),
     openapi.ApiResponse({ status: 201, type: Object }),

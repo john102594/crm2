@@ -19,6 +19,8 @@ const swagger_1 = require("@nestjs/swagger");
 const products_dto_1 = require("../dtos/products.dto");
 const products_service_1 = require("../services/products.service");
 const client_1 = require("@prisma/client");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let ProductsController = exports.ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
@@ -26,11 +28,22 @@ let ProductsController = exports.ProductsController = class ProductsController {
     getProducts(params) {
         return this.productsService.find(params);
     }
+    getOneSku(sku) {
+        return this.productsService.findOneSku(sku);
+    }
     getOne(productId) {
         return this.productsService.findOne(productId);
     }
     create(payload) {
         return this.productsService.create(payload);
+    }
+    fromCsvCreate(file) {
+        try {
+            return this.productsService.createFromCsv(file);
+        }
+        catch (error) {
+            return error;
+        }
     }
     bulkCreate(payload) {
         return this.productsService.createMany(payload);
@@ -52,6 +65,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getProducts", null);
 __decorate([
+    (0, common_1.Get)('/sku/:sku'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('sku')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "getOneSku", null);
+__decorate([
     (0, common_1.Get)(':productId'),
     (0, common_1.HttpCode)(common_1.HttpStatus.ACCEPTED),
     openapi.ApiResponse({ status: common_1.HttpStatus.ACCEPTED, type: Object }),
@@ -68,6 +89,19 @@ __decorate([
     __metadata("design:paramtypes", [products_dto_1.CreateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('/createfromcsv'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './files',
+        }),
+    })),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "fromCsvCreate", null);
 __decorate([
     (0, common_1.Post)('/bulk'),
     openapi.ApiResponse({ status: 201, type: [require("../dtos/products.dto").CreatedManyProduct] }),

@@ -13,6 +13,7 @@ const config_2 = require("./config");
 const users_module_1 = require("./users/users.module");
 const inventory_module_1 = require("./inventory/inventory.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const files_module_1 = require("./files/files.module");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -25,6 +26,7 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             users_module_1.UsersModule,
             inventory_module_1.InventoryModule,
+            files_module_1.FilesModule,
         ],
         controllers: [],
         providers: [],

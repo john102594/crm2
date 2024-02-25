@@ -75,7 +75,7 @@ model Person {
 
 model Product {
   id                    Int                    @id() @default(autoincrement())
-  name                  String                 @db.VarChar(255)
+  name                  String?                @db.VarChar(255)
   sku                   String                 @unique()
   image                 String?                @db.VarChar(255)
   createdAt             DateTime               @default(now()) @db.Timestamp(6)
@@ -83,9 +83,17 @@ model Product {
   unitCostAvg           Float?
   salePrice             Float?
   quantity              Float?
+  ubicationId           Int?
+  ubication             Ubication?             @relation(fields: [ubicationId], references: [id])
   inventoryTransactions InventoryTransaction[]
   purchaseOrderDetails  PurchaseOrderDetail[]
   saleOrderDetails      SaleOrderDetail[]
+}
+
+model Ubication {
+  id      Int       @id() @default(autoincrement())
+  name    String
+  Product Product[]
 }
 
 model PurchaseOrder {

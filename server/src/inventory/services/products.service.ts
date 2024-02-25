@@ -7,15 +7,21 @@ import {
 import {
   CreateProductDto,
   UpdateProductDto,
-  FilterProductDto,
+  FindSkuProductDto,
   CreatedManyProduct,
 } from '../dtos/products.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, Product } from '@prisma/client';
+import { UploadFilesService } from 'src/files/upload-files.service';
+import { ParseFilesService } from 'src/files/parse-files.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private uploadFilesService: UploadFilesService,
+    private parseFilesService: ParseFilesService,
+  ) {}
   //create crud for product service using prisma service
 
   // async find(params?: FilterProductDto): Promise<Product[]> {
@@ -32,7 +38,7 @@ export class ProductsService {
   //   }
   // }
 
-  async find(params?: Prisma.ProductFindManyArgs): Promise<Product[]> {
+  async find(params?: any): Promise<Product[]> {
     return await this.prisma.product.findMany({
       skip: params.skip,
       take: params.take,
@@ -48,6 +54,17 @@ export class ProductsService {
       throw new NotFoundException(`Product #${id} not found`);
     }
     return product;
+  }
+
+  async findOneSku(sku: string) {
+    try {
+      const product = await this.prisma.product.findUnique({
+        where: { sku: sku },
+      });
+      return product;
+    } catch (error) {
+      return error;
+    }
   }
 
   async createMany(data: CreateProductDto[]) {
@@ -70,6 +87,33 @@ export class ProductsService {
       }),
     );
     return products;
+  }
+
+  async createFromCsv(file) {
+    try {
+      const csvData = await this.uploadFilesService.uploadCsv(file, true);
+
+      const csvParse = (await this.parseFilesService.parseCsv(csvData)) as [
+        {
+          sku: string;
+          quantity?: number;
+          unitcostavg?: number;
+          saleprice?: number;
+        },
+      ];
+      //Parse Json to object Product[]
+      const data = csvParse.map(
+        ({ sku, quantity, unitcostavg, saleprice }) => ({
+          sku,
+          quantity: quantity | 0,
+          unitCostAvg: unitcostavg | 0,
+          salePrice: saleprice | 0,
+        }),
+      );
+      return await this.prisma.product.createMany({ data });
+    } catch (error) {
+      return error;
+    }
   }
 
   async create(data: CreateProductDto) {

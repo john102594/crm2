@@ -10,6 +10,8 @@ import {
   HttpStatus,
   HttpCode,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
@@ -19,6 +21,8 @@ import {
   UpdateSaleOrderItemDto,
 } from '../dtos/sale-order-detail.dto';
 import { CreateSaleOrderDto } from '../dtos/sale-order.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('saleorders')
 @Controller('saleorders')
@@ -35,6 +39,22 @@ export class SaleOrdersController {
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('saleOrderId', ParseIntPipe) orderId: number) {
     return this.saleOrdersService.findOne(orderId);
+  }
+
+  @Post('/createfromcsv')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+      }),
+    }),
+  )
+  fromCsvCreate(@UploadedFile() file) {
+    try {
+      return this.saleOrdersService.createFromCsv(file);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Post()

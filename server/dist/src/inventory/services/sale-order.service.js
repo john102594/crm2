@@ -12,9 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SaleOrdersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const upload_files_service_1 = require("../../files/upload-files.service");
+const parse_files_service_1 = require("../../files/parse-files.service");
 let SaleOrdersService = exports.SaleOrdersService = class SaleOrdersService {
-    constructor(prisma) {
+    constructor(prisma, uploadFilesService, parseFilesService) {
         this.prisma = prisma;
+        this.uploadFilesService = uploadFilesService;
+        this.parseFilesService = parseFilesService;
     }
     async findAll() {
         return await this.prisma.saleOrder.findMany({
@@ -28,25 +32,51 @@ let SaleOrdersService = exports.SaleOrdersService = class SaleOrdersService {
         });
         return order;
     }
+    async createFromCsv(file) {
+        try {
+            const csvData = await this.uploadFilesService.uploadCsv(file, true);
+            const csvParse = (await this.parseFilesService.parseCsv(csvData));
+            let data = [];
+            for (let i = 0; i < csvParse.length; i++) {
+                const element = csvParse[i];
+                const order = {
+                    total_cost: element.total,
+                    saleOrderDetails: [
+                        {
+                            productId: element.productid,
+                            unit_price: element.unitprice,
+                            quantity: element.quantity,
+                        },
+                    ],
+                };
+                data.push(await this.create(order));
+            }
+            return data;
+        }
+        catch (error) {
+            return error;
+        }
+    }
     async create(payload) {
         const productsId = payload.saleOrderDetails.map((element) => element.productId);
+        console.log(productsId);
         try {
             return await this.prisma.$transaction(async (tx) => {
                 let InventaryTransaction = [];
                 for (let i = 0; i < productsId.length; i++) {
                     const element = payload.saleOrderDetails[i];
-                    const result = (await tx.inventoryTransaction.findFirst({
+                    const result = (await tx.product.findUnique({
                         select: {
-                            balance: true,
+                            quantity: true,
                             unitCostAvg: true,
                         },
-                        where: { productId: productsId[i] },
-                        orderBy: { id: 'desc' },
+                        where: { id: productsId[i] },
                     })) || {
-                        balance: 0,
+                        quantity: 0,
                         unitCostAvg: 0,
                     };
-                    const newsaldo = Number(result.balance) - element.quantity;
+                    console.log(result);
+                    const newsaldo = Number(result.quantity) - element.quantity;
                     InventaryTransaction.push({
                         productId: element.productId,
                         transactionTypeId: 2,
@@ -93,6 +123,8 @@ let SaleOrdersService = exports.SaleOrdersService = class SaleOrdersService {
 };
 exports.SaleOrdersService = SaleOrdersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        upload_files_service_1.UploadFilesService,
+        parse_files_service_1.ParseFilesService])
 ], SaleOrdersService);
 //# sourceMappingURL=sale-order.service.js.map

@@ -9,19 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterProductDto = exports.CreatedManyProduct = exports.UpdateProductDto = exports.CreateProductDto = void 0;
+exports.FilterProductDto = exports.CreatedManyProduct = exports.FindSkuProductDto = exports.UpdateProductDto = exports.CreateProductDto = void 0;
 const openapi = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class CreateProductDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String }, sku: { required: true, type: () => String }, image: { required: false, type: () => String }, unitCostAvg: { required: true, type: () => Number }, salePrice: { required: true, type: () => Number }, quantity: { required: true, type: () => Number } };
+        return { name: { required: true, type: () => String }, sku: { required: true, type: () => String }, image: { required: false, type: () => String }, unitCostAvg: { required: true, type: () => Number }, salePrice: { required: true, type: () => Number }, quantity: { required: true, type: () => Number }, ubicationId: { required: true, type: () => Number } };
     }
 }
 exports.CreateProductDto = CreateProductDto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, swagger_1.ApiProperty)({ description: `product's name` }),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "name", void 0);
@@ -51,12 +51,24 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "quantity", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "ubicationId", void 0);
 class UpdateProductDto extends (0, swagger_1.PartialType)(CreateProductDto) {
     static _OPENAPI_METADATA_FACTORY() {
         return {};
     }
 }
 exports.UpdateProductDto = UpdateProductDto;
+class FindSkuProductDto extends (0, swagger_1.PickType)(CreateProductDto, ['sku']) {
+    static _OPENAPI_METADATA_FACTORY() {
+        return {};
+    }
+}
+exports.FindSkuProductDto = FindSkuProductDto;
 class CreatedManyProduct {
     static _OPENAPI_METADATA_FACTORY() {
         return { state: { required: true, type: () => String }, product: { required: true, type: () => Object } };

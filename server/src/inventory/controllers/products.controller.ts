@@ -10,6 +10,8 @@ import {
   HttpStatus,
   HttpCode,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -17,10 +19,12 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   CreateProductDto,
   UpdateProductDto,
-  FilterProductDto,
+  FindSkuProductDto,
 } from '../dtos/products.dto';
 import { ProductsService } from '../services/products.service';
 import { Prisma } from '@prisma/client';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('products')
 @Controller('products')
@@ -33,6 +37,11 @@ export class ProductsController {
     return this.productsService.find(params);
   }
 
+  @Get('/sku/:sku')
+  getOneSku(@Param('sku') sku: string) {
+    return this.productsService.findOneSku(sku);
+  }
+
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('productId', ParseIntPipe) productId: number) {
@@ -42,6 +51,22 @@ export class ProductsController {
   @Post()
   create(@Body() payload: CreateProductDto) {
     return this.productsService.create(payload);
+  }
+
+  @Post('/createfromcsv')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+      }),
+    }),
+  )
+  fromCsvCreate(@UploadedFile() file) {
+    try {
+      return this.productsService.createFromCsv(file);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Post('/bulk')

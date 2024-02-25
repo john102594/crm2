@@ -34,6 +34,7 @@ export declare class SaleOrdersController {
         createdAt: Date;
         updateAt: Date;
     }, unknown> & {}>;
+    fromCsvCreate(file: any): any;
     create(payload: CreateSaleOrderDto): Promise<any>;
     update(id: number, payload: UpdateSaleOrderItemDto[]): Promise<void>;
     delete(id: number): Promise<import("@prisma/client/runtime").GetResult<{

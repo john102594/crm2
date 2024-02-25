@@ -14,7 +14,9 @@ export declare class ProductsController {
         unitCostAvg: number;
         salePrice: number;
         quantity: number;
+        ubicationId: number;
     }, unknown> & {})[]>;
+    getOneSku(sku: string): Promise<any>;
     getOne(productId: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
         name: string;
@@ -25,6 +27,7 @@ export declare class ProductsController {
         unitCostAvg: number;
         salePrice: number;
         quantity: number;
+        ubicationId: number;
     }, unknown> & {}>;
     create(payload: CreateProductDto): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
@@ -36,7 +39,9 @@ export declare class ProductsController {
         unitCostAvg: number;
         salePrice: number;
         quantity: number;
+        ubicationId: number;
     }, unknown> & {}>;
+    fromCsvCreate(file: any): any;
     bulkCreate(payload: CreateProductDto[]): Promise<import("../dtos/products.dto").CreatedManyProduct[]>;
     update(id: number, payload: UpdateProductDto): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
@@ -48,6 +53,7 @@ export declare class ProductsController {
         unitCostAvg: number;
         salePrice: number;
         quantity: number;
+        ubicationId: number;
     }, unknown> & {}>;
     delete(id: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
@@ -59,5 +65,6 @@ export declare class ProductsController {
         unitCostAvg: number;
         salePrice: number;
         quantity: number;
+        ubicationId: number;
     }, unknown> & {}>;
 }
