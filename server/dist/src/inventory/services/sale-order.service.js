@@ -49,7 +49,7 @@ let SaleOrdersService = exports.SaleOrdersService = class SaleOrdersService {
                         },
                     ],
                 };
-                data.push(await this.create(order));
+                data.push(order);
             }
             return data;
         }
