@@ -14,6 +14,9 @@ export declare class InventoryTransactionsService {
         updateAt: Date;
         productId: number;
     }, unknown> & {})[]>;
+    getResumeMonth(): Promise<any>;
+    getResumeDay(): Promise<any>;
+    getResumeYear(): Promise<any>;
     findOne(id: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
         quantity: number;

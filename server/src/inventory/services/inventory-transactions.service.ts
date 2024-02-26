@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-
 import {
   CreateInventoryTransactionDto,
   UpdateInventoryTransactionDto,
 } from '../dtos/inventory-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { querys } from 'src/sql/querys';
 
 @Injectable()
 export class InventoryTransactionsService {
@@ -14,6 +14,38 @@ export class InventoryTransactionsService {
   //Find all
   async findAll() {
     return await this.prisma.inventoryTransaction.findMany();
+  }
+
+  async getResumeMonth() {
+    const query = querys.getResumeMonthInventoryTransitions;
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getResumeDay() {
+    const query = querys.getResumeDayInventoryTransitions;
+
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getResumeYear() {
+    const query = querys.getResumeYearInventoryTransitions;
+
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
   }
 
   //Find One

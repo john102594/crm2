@@ -25,6 +25,15 @@ let InventoryTransactionsController = exports.InventoryTransactionsController = 
     getOrders() {
         return this.inventoryTransactionsServices.findAll();
     }
+    getMonthOrdersResume() {
+        return this.inventoryTransactionsServices.getResumeMonth();
+    }
+    getDayOrdersResume() {
+        return this.inventoryTransactionsServices.getResumeDay();
+    }
+    getYearOrdersResume() {
+        return this.inventoryTransactionsServices.getResumeYear();
+    }
     getOne(orderId) {
         return this.inventoryTransactionsServices.findOne(orderId);
     }
@@ -46,6 +55,27 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], InventoryTransactionsController.prototype, "getOrders", null);
+__decorate([
+    (0, common_1.Get)('/getmonthresume'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], InventoryTransactionsController.prototype, "getMonthOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getdayresume'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], InventoryTransactionsController.prototype, "getDayOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getyearresume'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], InventoryTransactionsController.prototype, "getYearOrdersResume", null);
 __decorate([
     (0, common_1.Get)(':orderId'),
     (0, common_1.HttpCode)(common_1.HttpStatus.ACCEPTED),

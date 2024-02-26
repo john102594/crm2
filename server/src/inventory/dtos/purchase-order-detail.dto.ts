@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsNumber, IsPositive, isPositive } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  isPositive,
+} from 'class-validator';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 export class CreatePurchaseOrderItemDto {
@@ -16,10 +24,21 @@ export class CreatePurchaseOrderItemDto {
   @ApiProperty()
   readonly unit_cost: number;
 
+  @IsOptional()
   @IsNumber()
   @IsPositive()
   @ApiProperty()
-  readonly productId: number;
+  readonly productId?: number;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  readonly sku?: string;
+
+  @IsOptional()
+  @IsDateString()
+  @ApiProperty()
+  readonly createdAt?: Date;
 }
 
 export class UpdatePurchaseOrderItemDto extends PartialType(

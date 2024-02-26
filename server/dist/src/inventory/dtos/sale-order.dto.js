@@ -17,7 +17,7 @@ const sale_order_detail_dto_1 = require("./sale-order-detail.dto");
 const class_transformer_1 = require("class-transformer");
 class CreateSaleOrderDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { total_cost: { required: true, type: () => Number }, createdAt: { required: false, type: () => Date }, saleOrderDetails: { required: true, type: () => [require("./sale-order-detail.dto").CreateSaleOrderItemDto] } };
+        return { total: { required: true, type: () => Number }, createdAt: { required: false, type: () => Date }, saleOrderDetails: { required: true, type: () => [require("./sale-order-detail.dto").CreateSaleOrderItemDto] } };
     }
 }
 exports.CreateSaleOrderDto = CreateSaleOrderDto;
@@ -25,7 +25,7 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
-], CreateSaleOrderDto.prototype, "total_cost", void 0);
+], CreateSaleOrderDto.prototype, "total", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsDateString)(),

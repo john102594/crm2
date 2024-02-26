@@ -27,10 +27,10 @@ import { UbicationController } from './controllers/ubication.controller';
     PurchaseOrdersService,
     UbicationService,
     // PurchaseOrderDetailsService,
-    // InventoryTransactionsService,
+    InventoryTransactionsService,
   ],
   controllers: [
-    // InventoryTransactionsController,
+    InventoryTransactionsController,
     SaleOrdersController,
     ProductsController,
     PurchaseOrdersController,

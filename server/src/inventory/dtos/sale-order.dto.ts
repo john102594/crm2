@@ -13,7 +13,7 @@ import { Type } from 'class-transformer';
 export class CreateSaleOrderDto {
   @IsNumber()
   @ApiProperty()
-  readonly total_cost: number;
+  readonly total: number;
 
   @IsOptional()
   @IsDateString()

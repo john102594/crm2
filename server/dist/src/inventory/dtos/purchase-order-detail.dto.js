@@ -15,7 +15,7 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class CreatePurchaseOrderItemDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { quantity: { required: true, type: () => Number }, unit_cost: { required: true, type: () => Number }, productId: { required: true, type: () => Number, minimum: 1 } };
+        return { quantity: { required: true, type: () => Number }, unit_cost: { required: true, type: () => Number }, productId: { required: false, type: () => Number, minimum: 1 }, sku: { required: false, type: () => String }, createdAt: { required: false, type: () => Date } };
     }
 }
 exports.CreatePurchaseOrderItemDto = CreatePurchaseOrderItemDto;
@@ -31,11 +31,24 @@ __decorate([
     __metadata("design:type", Number)
 ], CreatePurchaseOrderItemDto.prototype, "unit_cost", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], CreatePurchaseOrderItemDto.prototype, "productId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CreatePurchaseOrderItemDto.prototype, "sku", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], CreatePurchaseOrderItemDto.prototype, "createdAt", void 0);
 class UpdatePurchaseOrderItemDto extends (0, swagger_1.PartialType)(CreatePurchaseOrderItemDto) {
     static _OPENAPI_METADATA_FACTORY() {
         return {};

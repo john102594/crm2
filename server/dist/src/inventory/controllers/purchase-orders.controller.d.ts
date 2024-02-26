@@ -17,7 +17,11 @@ export declare class PurchaseOrdersController {
         id: number;
         createdAt: Date;
         updateAt: Date;
+        total: number;
     }, unknown> & {})[]>;
+    getMonthOrdersResume(): Promise<any>;
+    getDayOrdersResume(): Promise<any>;
+    getYearOrdersResume(): Promise<any>;
     getOne(purchaseorderId: number): Promise<{
         purchaseOrderDetails: (import("@prisma/client/runtime").GetResult<{
             id: number;
@@ -32,8 +36,10 @@ export declare class PurchaseOrdersController {
         id: number;
         createdAt: Date;
         updateAt: Date;
+        total: number;
     }, unknown> & {}>;
     create(payload: CreatePurchaseOrderDto): Promise<any>;
+    fromCsvCreate(file: any): any;
     update(id: number, payload: any[]): Promise<void>;
     delete(id: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;

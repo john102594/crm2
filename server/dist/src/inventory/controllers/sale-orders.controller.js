@@ -27,8 +27,20 @@ let SaleOrdersController = exports.SaleOrdersController = class SaleOrdersContro
     getOrders() {
         return this.saleOrdersService.findAll();
     }
+    getMonthOrdersResume() {
+        return this.saleOrdersService.getResumeMonth();
+    }
+    getDayOrdersResume() {
+        return this.saleOrdersService.getResumeDay();
+    }
+    getYearOrdersResume() {
+        return this.saleOrdersService.getResumeYear();
+    }
     getOne(orderId) {
         return this.saleOrdersService.findOne(orderId);
+    }
+    create(payload) {
+        return this.saleOrdersService.create(payload);
     }
     fromCsvCreate(file) {
         try {
@@ -37,9 +49,6 @@ let SaleOrdersController = exports.SaleOrdersController = class SaleOrdersContro
         catch (error) {
             return error;
         }
-    }
-    create(payload) {
-        return this.saleOrdersService.create(payload);
     }
     update(id, payload) {
         return this.saleOrdersService.update(+id, payload);
@@ -57,6 +66,30 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SaleOrdersController.prototype, "getOrders", null);
 __decorate([
+    (0, common_1.Get)('/getmonthresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SaleOrdersController.prototype, "getMonthOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getdayresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SaleOrdersController.prototype, "getDayOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getyearresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SaleOrdersController.prototype, "getYearOrdersResume", null);
+__decorate([
     (0, common_1.Get)(':saleOrderId'),
     (0, common_1.HttpCode)(common_1.HttpStatus.ACCEPTED),
     openapi.ApiResponse({ status: common_1.HttpStatus.ACCEPTED, type: Object }),
@@ -65,6 +98,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], SaleOrdersController.prototype, "getOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [sale_order_dto_1.CreateSaleOrderDto]),
+    __metadata("design:returntype", void 0)
+], SaleOrdersController.prototype, "create", null);
 __decorate([
     (0, common_1.Post)('/createfromcsv'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
@@ -78,14 +119,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SaleOrdersController.prototype, "fromCsvCreate", null);
-__decorate([
-    (0, common_1.Post)(),
-    openapi.ApiResponse({ status: 201, type: Object }),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sale_order_dto_1.CreateSaleOrderDto]),
-    __metadata("design:returntype", void 0)
-], SaleOrdersController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
     openapi.ApiResponse({ status: 200 }),

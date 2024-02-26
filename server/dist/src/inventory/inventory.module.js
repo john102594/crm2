@@ -13,7 +13,9 @@ const files_module_1 = require("../files/files.module");
 const sale_order_service_1 = require("./services/sale-order.service");
 const products_service_1 = require("./services/products.service");
 const purchase_orders_service_1 = require("./services/purchase-orders.service");
+const inventory_transactions_service_1 = require("./services/inventory-transactions.service");
 const ubication_service_1 = require("./services/ubication.service");
+const inventory_transactions_controller_1 = require("./controllers/inventory-transactions.controller");
 const sale_orders_controller_1 = require("./controllers/sale-orders.controller");
 const products_controller_1 = require("./controllers/products.controller");
 const purchase_orders_controller_1 = require("./controllers/purchase-orders.controller");
@@ -28,8 +30,10 @@ exports.InventoryModule = InventoryModule = __decorate([
             products_service_1.ProductsService,
             purchase_orders_service_1.PurchaseOrdersService,
             ubication_service_1.UbicationService,
+            inventory_transactions_service_1.InventoryTransactionsService,
         ],
         controllers: [
+            inventory_transactions_controller_1.InventoryTransactionsController,
             sale_orders_controller_1.SaleOrdersController,
             products_controller_1.ProductsController,
             purchase_orders_controller_1.PurchaseOrdersController,

@@ -14,6 +14,9 @@ export declare class InventoryTransactionsController {
         updateAt: Date;
         productId: number;
     }, unknown> & {})[]>;
+    getMonthOrdersResume(): Promise<any>;
+    getDayOrdersResume(): Promise<any>;
+    getYearOrdersResume(): Promise<any>;
     getOne(orderId: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
         quantity: number;

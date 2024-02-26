@@ -35,10 +35,33 @@ export class SaleOrdersController {
     return this.saleOrdersService.findAll();
   }
 
+  @Get('/getmonthresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getMonthOrdersResume() {
+    return this.saleOrdersService.getResumeMonth();
+  }
+
+  @Get('/getdayresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getDayOrdersResume() {
+    return this.saleOrdersService.getResumeDay();
+  }
+
+  @Get('/getyearresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getYearOrdersResume() {
+    return this.saleOrdersService.getResumeYear();
+  }
+
   @Get(':saleOrderId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('saleOrderId', ParseIntPipe) orderId: number) {
     return this.saleOrdersService.findOne(orderId);
+  }
+
+  @Post()
+  create(@Body() payload: CreateSaleOrderDto) {
+    return this.saleOrdersService.create(payload);
   }
 
   @Post('/createfromcsv')
@@ -55,11 +78,6 @@ export class SaleOrdersController {
     } catch (error) {
       return error;
     }
-  }
-
-  @Post()
-  create(@Body() payload: CreateSaleOrderDto) {
-    return this.saleOrdersService.create(payload);
   }
 
   @Put(':id')

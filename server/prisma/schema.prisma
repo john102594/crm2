@@ -100,6 +100,7 @@ model PurchaseOrder {
   id                   Int                   @id() @default(autoincrement())
   createdAt            DateTime              @default(now()) @db.Timestamp(6)
   updateAt             DateTime              @default(now()) @db.Timestamp(6)
+  total                Float?
   // inventoryTransactions InventoryTransaction[]
   purchaseOrderDetails PurchaseOrderDetail[]
 }
@@ -118,6 +119,7 @@ model PurchaseOrderDetail {
 
 model SaleOrder {
   id               Int               @id() @default(autoincrement())
+  total            Float?
   createdAt        DateTime          @default(now()) @db.Timestamp(6)
   updateAt         DateTime          @default(now()) @db.Timestamp(6)
   // inventoryTransactions InventoryTransaction[]

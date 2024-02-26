@@ -10,13 +10,15 @@ import {
   HttpStatus,
   HttpCode,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { PurchaseOrdersService } from '../services/purchase-orders.service';
 import { CreatePurchaseOrderDto } from '../dtos/purchase-order.dto';
-import { Prisma } from '@prisma/client';
-import { ok } from 'assert';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('purchaseorders')
 @Controller('purchaseorders')
@@ -29,6 +31,24 @@ export class PurchaseOrdersController {
     return this.purchaseOrdersService.findAll();
   }
 
+  @Get('/getmonthresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getMonthOrdersResume() {
+    return this.purchaseOrdersService.getResumeMonth();
+  }
+
+  @Get('/getdayresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getDayOrdersResume() {
+    return this.purchaseOrdersService.getResumeDay();
+  }
+
+  @Get('/getyearresume')
+  @ApiOperation({ summary: 'Resumen' })
+  getYearOrdersResume() {
+    return this.purchaseOrdersService.getResumeYear();
+  }
+
   @Get(':purchaseorderId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('purchaseorderId', ParseIntPipe) purchaseorderId: number) {
@@ -38,6 +58,22 @@ export class PurchaseOrdersController {
   @Post()
   create(@Body() payload: CreatePurchaseOrderDto) {
     return this.purchaseOrdersService.create(payload);
+  }
+
+  @Post('/createfromcsv')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+      }),
+    }),
+  )
+  fromCsvCreate(@UploadedFile() file) {
+    try {
+      return this.purchaseOrdersService.createFromCsv(file);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Put(':id')

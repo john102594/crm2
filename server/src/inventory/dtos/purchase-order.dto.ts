@@ -1,7 +1,9 @@
 import {
+  IsDateString,
   IsDefined,
   IsNotEmptyObject,
   IsNumber,
+  IsOptional,
   ValidateNested,
 } from 'class-validator';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
@@ -11,7 +13,12 @@ import { Type } from 'class-transformer';
 export class CreatePurchaseOrderDto {
   @IsNumber()
   @ApiProperty()
-  readonly total_cost: number;
+  readonly total: number;
+
+  @IsOptional()
+  @IsDateString()
+  @ApiProperty()
+  readonly createdAt?: Date;
 
   @ValidateNested()
   @Type(() => CreatePurchaseOrderItemDto)

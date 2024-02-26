@@ -12,12 +12,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InventoryTransactionsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const querys_1 = require("../../sql/querys");
 let InventoryTransactionsService = exports.InventoryTransactionsService = class InventoryTransactionsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async findAll() {
         return await this.prisma.inventoryTransaction.findMany();
+    }
+    async getResumeMonth() {
+        const query = querys_1.querys.getResumeMonthInventoryTransitions;
+        try {
+            const resultado = await this.prisma.$queryRawUnsafe(query);
+            return resultado;
+        }
+        catch (error) {
+            return error;
+        }
+    }
+    async getResumeDay() {
+        const query = querys_1.querys.getResumeDayInventoryTransitions;
+        try {
+            const resultado = await this.prisma.$queryRawUnsafe(query);
+            return resultado;
+        }
+        catch (error) {
+            return error;
+        }
+    }
+    async getResumeYear() {
+        const query = querys_1.querys.getResumeYearInventoryTransitions;
+        try {
+            const resultado = await this.prisma.$queryRawUnsafe(query);
+            return resultado;
+        }
+        catch (error) {
+            return error;
+        }
     }
     async findOne(id) {
         const inventorytransaction = await this.prisma.inventoryTransaction.findUnique({

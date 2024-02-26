@@ -18,6 +18,8 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const purchase_orders_service_1 = require("../services/purchase-orders.service");
 const purchase_order_dto_1 = require("../dtos/purchase-order.dto");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let PurchaseOrdersController = exports.PurchaseOrdersController = class PurchaseOrdersController {
     constructor(purchaseOrdersService) {
         this.purchaseOrdersService = purchaseOrdersService;
@@ -25,11 +27,28 @@ let PurchaseOrdersController = exports.PurchaseOrdersController = class Purchase
     getPurchaseOrders() {
         return this.purchaseOrdersService.findAll();
     }
+    getMonthOrdersResume() {
+        return this.purchaseOrdersService.getResumeMonth();
+    }
+    getDayOrdersResume() {
+        return this.purchaseOrdersService.getResumeDay();
+    }
+    getYearOrdersResume() {
+        return this.purchaseOrdersService.getResumeYear();
+    }
     getOne(purchaseorderId) {
         return this.purchaseOrdersService.findOne(purchaseorderId);
     }
     create(payload) {
         return this.purchaseOrdersService.create(payload);
+    }
+    fromCsvCreate(file) {
+        try {
+            return this.purchaseOrdersService.createFromCsv(file);
+        }
+        catch (error) {
+            return error;
+        }
     }
     update(id, payload) {
         return this.purchaseOrdersService.update(+id, payload);
@@ -47,6 +66,30 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PurchaseOrdersController.prototype, "getPurchaseOrders", null);
 __decorate([
+    (0, common_1.Get)('/getmonthresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], PurchaseOrdersController.prototype, "getMonthOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getdayresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], PurchaseOrdersController.prototype, "getDayOrdersResume", null);
+__decorate([
+    (0, common_1.Get)('/getyearresume'),
+    (0, swagger_1.ApiOperation)({ summary: 'Resumen' }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], PurchaseOrdersController.prototype, "getYearOrdersResume", null);
+__decorate([
     (0, common_1.Get)(':purchaseorderId'),
     (0, common_1.HttpCode)(common_1.HttpStatus.ACCEPTED),
     openapi.ApiResponse({ status: common_1.HttpStatus.ACCEPTED, type: Object }),
@@ -63,6 +106,19 @@ __decorate([
     __metadata("design:paramtypes", [purchase_order_dto_1.CreatePurchaseOrderDto]),
     __metadata("design:returntype", void 0)
 ], PurchaseOrdersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('/createfromcsv'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './files',
+        }),
+    })),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], PurchaseOrdersController.prototype, "fromCsvCreate", null);
 __decorate([
     (0, common_1.Put)(':id'),
     openapi.ApiResponse({ status: 200 }),

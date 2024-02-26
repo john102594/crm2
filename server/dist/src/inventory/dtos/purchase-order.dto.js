@@ -17,7 +17,7 @@ const purchase_order_detail_dto_1 = require("./purchase-order-detail.dto");
 const class_transformer_1 = require("class-transformer");
 class CreatePurchaseOrderDto {
     static _OPENAPI_METADATA_FACTORY() {
-        return { total_cost: { required: true, type: () => Number }, purchaseOrderDetails: { required: true, type: () => [require("./purchase-order-detail.dto").CreatePurchaseOrderItemDto] } };
+        return { total: { required: true, type: () => Number }, createdAt: { required: false, type: () => Date }, purchaseOrderDetails: { required: true, type: () => [require("./purchase-order-detail.dto").CreatePurchaseOrderItemDto] } };
     }
 }
 exports.CreatePurchaseOrderDto = CreatePurchaseOrderDto;
@@ -25,7 +25,13 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
-], CreatePurchaseOrderDto.prototype, "total_cost", void 0);
+], CreatePurchaseOrderDto.prototype, "total", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], CreatePurchaseOrderDto.prototype, "createdAt", void 0);
 __decorate([
     (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => purchase_order_detail_dto_1.CreatePurchaseOrderItemDto),

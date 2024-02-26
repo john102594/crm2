@@ -20,9 +20,13 @@ export declare class SaleOrdersService {
         }, unknown> & {})[];
     } & import("@prisma/client/runtime").GetResult<{
         id: number;
+        total: number;
         createdAt: Date;
         updateAt: Date;
     }, unknown> & {})[]>;
+    getResumeMonth(): Promise<any>;
+    getResumeDay(): Promise<any>;
+    getResumeYear(): Promise<any>;
     findOne(id: number): Promise<{
         saleOrderDetails: (import("@prisma/client/runtime").GetResult<{
             id: number;
@@ -35,6 +39,7 @@ export declare class SaleOrdersService {
         }, unknown> & {})[];
     } & import("@prisma/client/runtime").GetResult<{
         id: number;
+        total: number;
         createdAt: Date;
         updateAt: Date;
     }, unknown> & {}>;
@@ -43,6 +48,7 @@ export declare class SaleOrdersService {
     update(id: number, changes: UpdateSaleOrderItemDto[]): Promise<void>;
     remove(id: number): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
+        total: number;
         createdAt: Date;
         updateAt: Date;
     }, unknown> & {}>;

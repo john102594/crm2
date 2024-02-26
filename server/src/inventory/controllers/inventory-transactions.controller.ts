@@ -32,6 +32,21 @@ export class InventoryTransactionsController {
     return this.inventoryTransactionsServices.findAll();
   }
 
+  @Get('/getmonthresume')
+  getMonthOrdersResume() {
+    return this.inventoryTransactionsServices.getResumeMonth();
+  }
+
+  @Get('/getdayresume')
+  getDayOrdersResume() {
+    return this.inventoryTransactionsServices.getResumeDay();
+  }
+
+  @Get('/getyearresume')
+  getYearOrdersResume() {
+    return this.inventoryTransactionsServices.getResumeYear();
+  }
+
   @Get(':orderId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('orderId', ParseIntPipe) orderId: number) {

@@ -1,18 +1,14 @@
 import {
   Injectable,
-  NotFoundException,
   // BadRequestException,
 } from '@nestjs/common';
-import {
-  CreateSaleOrderItemDto,
-  UpdateSaleOrderItemDto,
-} from '../dtos/sale-order-detail.dto';
+import { UpdateSaleOrderItemDto } from '../dtos/sale-order-detail.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSaleOrderDto } from '../dtos/sale-order.dto';
 import { CreateInventoryTransactionDto } from '../dtos/inventory-transaction.dto';
 import { UploadFilesService } from 'src/files/upload-files.service';
 import { ParseFilesService } from 'src/files/parse-files.service';
-import moment from 'moment';
+import { querys } from 'src/sql/querys';
 
 @Injectable()
 export class SaleOrdersService {
@@ -26,6 +22,39 @@ export class SaleOrdersService {
     return await this.prisma.saleOrder.findMany({
       include: { saleOrderDetails: true },
     });
+  }
+
+  async getResumeMonth() {
+    const query = querys.getResumeMonthSaleDetails;
+
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getResumeDay() {
+    const query = querys.getResumeDaySaleDetails;
+
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getResumeYear() {
+    const query = querys.getResumeYearSaleDetails;
+
+    try {
+      const resultado = await this.prisma.$queryRawUnsafe(query);
+      return resultado;
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOne(id: number) {
@@ -55,56 +84,68 @@ export class SaleOrdersService {
       let data = [];
       for (let i = 0; i < csvParse.length; i++) {
         const element = csvParse[i];
-        // let dateString = element.createdat;
-        // const time = await new Date(
-        //   dateString.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3'),
-        // );
+        let dateString = element.createdat;
+        const time = await new Date(
+          dateString.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3'),
+        );
         const order: CreateSaleOrderDto = {
-          total_cost: element.total,
+          total: element.total,
+          createdAt: time,
           saleOrderDetails: [
             {
               productId: element.productid,
               unit_price: element.unitprice,
               quantity: element.quantity,
+              sku: element.sku,
+              createdAt: time,
             },
           ],
         };
-        // data.push(await this.create(order));
-        data.push(order);
+        data.push(await this.create(order));
+        // data.push(order);
       }
-
-      return data;
+      const registernum = data.length;
+      data = null;
+      return registernum;
     } catch (error) {
       return error;
     }
   }
 
   async create(payload: CreateSaleOrderDto) {
-    const productsId = payload.saleOrderDetails.map(
-      (element) => element.productId,
-    );
-    console.log(productsId);
+    // console.log(productsId);
+    let saleOrderDetails: any[] = payload.saleOrderDetails.slice();
+
     try {
       return await this.prisma.$transaction(async (tx) => {
         let InventaryTransaction: CreateInventoryTransactionDto[] = [];
 
-        for (let i = 0; i < productsId.length; i++) {
+        for (let i = 0; i < saleOrderDetails.length; i++) {
           const element = payload.saleOrderDetails[i];
-          const result = (await tx.product.findUnique({
+          const result = (await tx.product.findFirst({
             select: {
               quantity: true,
               unitCostAvg: true,
+              id: true,
             },
-            where: { id: productsId[i] },
+            where: { OR: [{ id: element.productId }, { sku: element.sku }] },
           })) || {
+            id: null,
             quantity: 0,
             unitCostAvg: 0,
           };
-          console.log(result);
+
+          saleOrderDetails[i] = {
+            productId: result.id,
+            quantity: element.quantity,
+            unit_price: element.unit_price,
+            createdAt: element.createdAt,
+          };
+
           const newsaldo = Number(result.quantity) - element.quantity;
 
           InventaryTransaction.push({
-            productId: element.productId,
+            productId: result.id,
             transactionTypeId: 2, //id type compra
             quantity: -element.quantity,
             unitPrice: element.unit_price,
@@ -112,6 +153,7 @@ export class SaleOrdersService {
             unitCostAvg: result.unitCostAvg,
           });
 
+          console.log(InventaryTransaction);
           // Update product db
           await tx.product.update({
             data: {
@@ -119,22 +161,25 @@ export class SaleOrdersService {
               unitCostAvg: result.unitCostAvg,
             },
             where: {
-              id: productsId[i],
+              id: result.id,
             },
           });
         }
 
-        //Query create sale order and order detail
+        // Query create sale order and order detail
         const response = await tx.saleOrder.create({
           data: {
+            total: payload.total,
+            createdAt: payload.createdAt,
             saleOrderDetails: {
-              create: payload.saleOrderDetails,
+              create: saleOrderDetails,
             },
           },
           include: {
             saleOrderDetails: true, // Include all posts in the returned object
           },
         });
+        // console.log(response);
 
         //Query add inventory transaction
         await tx.inventoryTransaction.createMany({
